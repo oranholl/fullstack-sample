@@ -1,21 +1,103 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import PokemonListPage from "./pages/PokemonListPage";
 import PokemonDetailPage from "./pages/PokemonDetailPage";
 import AddPokemonPage from "./pages/AddPokemonPage";
+import EditPokemonPage from "./pages/EditPokemonPage";
+import LoginPage from "./pages/LoginPage";
+import { useAuth, useLogout } from "./hooks/useAuth";
 
 export default function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const { username, isAuthenticated } = useAuth();
+  const logout = useLogout();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      // Check if it's a number (search by ID)
+      if (/^\d+$/.test(searchQuery.trim())) {
+        // Navigate directly to pokemon detail
+        navigate(`/pokemon/${searchQuery.trim()}`);
+      } else {
+        // Search by name - navigate to list with search param
+        navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
+      }
+    } else {
+      navigate("/");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <nav className="mb-4 flex gap-4 border-b pb-2">
-        <Link to="/">Pokémons</Link>
-        <Link to="/add">Add Pokémon</Link>
+    <div>
+      <header className="app-header">
+        <h1 className="app-title">Pokédex</h1>
+      </header>
+
+      <nav className="app-nav">
+        <div className="nav-content">
+          <div className="nav-top">
+            <div className="search-section">
+              <label className="search-label">Name or Number</label>
+              <div className="search-box">
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search Pokémon..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                />
+                <button className="search-button" onClick={handleSearch}>
+                  🔍
+                </button>
+              </div>
+              <p className="advanced-search-text">
+                Use the Advanced Search to explore Pokémon by type, weakness, Ability, and more!
+              </p>
+            </div>
+
+            <div className="info-box">
+              <p>
+                Search for a Pokémon by name or using its National Pokédex number.
+              </p>
+            </div>
+          </div>
+
+          <div className="nav-bottom">
+            <div className="auth-section">
+              {isAuthenticated ? (
+                <>
+                  <span className="auth-username">Welcome, <strong>{username}</strong></span>
+                  <button onClick={logout} className="auth-button">
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <button onClick={() => navigate("/login")} className="auth-button login-button">
+                  Login
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       </nav>
 
-      <Routes>
-        <Route path="/" element={<PokemonListPage />} />
-        <Route path="/pokemon/:id" element={<PokemonDetailPage />} />
-        <Route path="/add" element={<AddPokemonPage />} />
-      </Routes>
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<PokemonListPage />} />
+          <Route path="/pokemon/:id" element={<PokemonDetailPage />} />
+          <Route path="/add" element={<AddPokemonPage />} />
+          <Route path="/edit/:id" element={<EditPokemonPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </main>
     </div>
   );
 }
