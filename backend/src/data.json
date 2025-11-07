@@ -1,5 +1,23 @@
 [
-  { "id": "1", "name": "Pikachu", "type": "Electric" },
-  { "id": "2", "name": "Charmander", "type": "Fire" },
-  { "id": "3", "name": "Squirtle", "type": "Water" }
+  {
+    "id": "1",
+    "name": "Pikachu",
+    "height": 40,
+    "weight": 60,
+    "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
+  },
+  {
+    "id": "2",
+    "name": "Charmander",
+    "height": 60,
+    "weight": 85,
+    "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"
+  },
+  {
+    "id": "3",
+    "name": "Squirtle",
+    "height": 50,
+    "weight": 90,
+    "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png"
+  }
 ]

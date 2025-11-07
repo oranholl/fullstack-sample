@@ -10,7 +10,12 @@ async function startServer() {
   const server = new ApolloServer({ typeDefs, resolvers });
   await server.start();
 
-  app.use("/graphql", cors(), bodyParser.json(), expressMiddleware(server));
+  app.use(
+    "/graphql",
+    cors<cors.CorsRequest>(),
+    bodyParser.json(),
+    expressMiddleware(server)
+  );
 
   const PORT = 4000;
   app.listen(PORT, () =>
