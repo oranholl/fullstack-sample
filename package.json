@@ -1,8 +1,11 @@
 {
-  "devDependencies": {
-    "vite": "^6.4.1"
+  "private": true,
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "build": "npm run build --prefix frontend && npm run build --prefix backend"
   },
-  "dependencies": {
-    "typescript": "^5.9.3"
+  "devDependencies": {
+    "concurrently": "^9.1.0"
   }
 }
