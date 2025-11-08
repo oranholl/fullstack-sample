@@ -34,6 +34,22 @@ export const GET_POKEMONS = gql`
   }
 `;
 
+export const GET_TOTAL_COUNT = gql`
+  query GetTotalCount {
+    pokemons(page: 1, pageSize: 1, sortBy: NAME, sortOrder: ASC) {
+      totalCount
+    }
+  }
+`;
+
+export const CHECK_POKEMON_EXISTS = gql`
+  query CheckPokemonExists($id: ID!) {
+    pokemon(id: $id) {
+      id
+    }
+  }
+`;
+
 export const GET_POKEMON = gql`
   query GetPokemon($id: ID!) {
     pokemon(id: $id) {

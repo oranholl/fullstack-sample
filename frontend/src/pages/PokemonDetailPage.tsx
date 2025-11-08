@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useParams, Link } from "react-router-dom";
 import TypeBadge from "../components/TypeBadge";
-import { GET_POKEMON } from "../graphql/queries";
+import { GET_POKEMON, CHECK_POKEMON_EXISTS } from "../graphql/queries";
 import { cmToFeetInches, kgToLbs, formatPokedexNumber } from "../utils/conversions";
 
 export default function PokemonDetailPage() {
@@ -10,12 +10,25 @@ export default function PokemonDetailPage() {
     variables: { id },
   });
 
+  const currentNum = parseInt(id!);
+  
+  const { data: prevData } = useQuery(CHECK_POKEMON_EXISTS, {
+    variables: { id: String(currentNum - 1) },
+    skip: currentNum <= 1,
+  });
+  
+  const { data: nextData } = useQuery(CHECK_POKEMON_EXISTS, {
+    variables: { id: String(currentNum + 1) },
+  });
+
   if (loading) return <div className="detail-container"><p>Loading...</p></div>;
   if (error) return <div className="detail-container"><p>Error: {error.message}</p></div>;
   if (!data?.pokemon) return <div className="detail-container"><p>Pokémon not found</p></div>;
 
   const pokemon = data.pokemon;
   const displayNumber = pokemon.pokedexNumber || id;
+  const hasPrevious = currentNum > 1 && prevData?.pokemon;
+  const hasNext = !!nextData?.pokemon;
 
   return (
     <div className="detail-container">
@@ -24,12 +37,24 @@ export default function PokemonDetailPage() {
           ← Back to List
         </Link>
         <div style={{ display: "flex", gap: "1rem" }}>
-          <Link to={`/pokemon/${parseInt(id!) - 1}`} className="nav-link">
-            ← Previous
-          </Link>
-          <Link to={`/pokemon/${parseInt(id!) + 1}`} className="nav-link">
-            Next →
-          </Link>
+          {hasPrevious ? (
+            <Link to={`/pokemon/${currentNum - 1}`} className="nav-link">
+              ← Previous
+            </Link>
+          ) : (
+            <button className="nav-link" disabled style={{ opacity: 0.4, cursor: "not-allowed" }}>
+              ← Previous
+            </button>
+          )}
+          {hasNext ? (
+            <Link to={`/pokemon/${currentNum + 1}`} className="nav-link">
+              Next →
+            </Link>
+          ) : (
+            <button className="nav-link" disabled style={{ opacity: 0.4, cursor: "not-allowed" }}>
+              Next →
+            </button>
+          )}
         </div>
       </div>
 
