@@ -65,9 +65,11 @@ export default function PokemonListPage() {
   };
 
   const handleSurpriseMe = () => {
-    if (data?.pokemons.totalCount) {
-      const randomNum = Math.floor(Math.random() * data.pokemons.totalCount) + 1;
-      navigate(`/pokemon/${randomNum}`);
+    if (items.length > 0) {
+      const randomIndex = Math.floor(Math.random() * items.length);
+      const randomPokemon = items[randomIndex];
+      const displayNumber = randomPokemon.pokedexNumber || randomPokemon.id;
+      navigate(`/pokemon/${displayNumber}`);
     }
   };
 
