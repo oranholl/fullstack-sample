@@ -5,16 +5,15 @@ import { Pokemon } from "./models";
 export async function migrate() {
   try {
     await connectDatabase();
-    console.log("Running migrations...\n");
+    console.log("Running migrations...");
 
-    // Migration 1: Add generation field
     const result = await Pokemon.updateMany(
       { generation: { $exists: false } },
       { $set: { generation: null } }
     );
     console.log(`Added generation field to ${result.modifiedCount} Pokemon`);
 
-    console.log("Migrations completed!");
+    console.log("Migrations complete");
   } catch (error) {
     console.error("Migration failed:", error);
     throw error;

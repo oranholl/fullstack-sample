@@ -4,7 +4,7 @@ const pokemonSchema = new mongoose.Schema({
   pokedexNumber: {
     type: Number,
     unique: true,
-    sparse: true, // Allows null for custom Pokemon
+    sparse: true,
   },
   name: {
     type: String,
@@ -53,7 +53,6 @@ const pokemonSchema = new mongoose.Schema({
   timestamps: true, 
 });
 
-// Add index for faster name searches
 pokemonSchema.index({ name: 'text' });
 pokemonSchema.index({ types: 1 });
 pokemonSchema.index({ pokedexNumber: 1 });

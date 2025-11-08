@@ -8,17 +8,16 @@ dotenv.config();
 const SALT_ROUNDS = 10;
 
 async function seedDatabase() {
-  console.log("🌱 Starting database seed...\n");
+  console.log("Starting database seed...");
 
   try {
     await connectDatabase();
 
-    console.log("🗑️  Clearing existing data...");
+    console.log("Clearing existing data...");
     await Pokemon.deleteMany({});
     await User.deleteMany({});
-    console.log("✅ Cleared\n");
 
-    console.log("🎮 Seeding Pokemon...");
+    console.log("Seeding Pokemon...");
     const pokemonData = [
       {
         pokedexNumber: 1,
@@ -143,9 +142,8 @@ async function seedDatabase() {
     ];
 
     const pokemons = await Pokemon.insertMany(pokemonData);
-    console.log(`✅ Seeded ${pokemons.length} Pokemon\n`);
 
-    console.log("👥 Seeding Users...");
+    console.log("Seeding users...");
     const users = [
       { username: "admin", password: "admin123" },
       { username: "user", password: "user123" }
@@ -157,22 +155,13 @@ async function seedDatabase() {
         username: userData.username,
         password: hashedPassword
       });
-      console.log(`✅ Created user: ${userData.username}`);
     }
 
-    console.log("\n✨ Database seeded successfully!");
-    console.log("\n📊 Summary:");
-    console.log(`   - ${pokemons.length} Pokemon`);
-    console.log(`   - ${users.length} Users`);
-    console.log("\n🔐 Login credentials:");
-    console.log("   - admin / admin123");
-    console.log("   - user / user123");
-    console.log("\n💡 You can now query Pokemon by:");
-    console.log("   - MongoDB ID: pokemon(id: \"67abc123...\")")
-    console.log("   - Pokedex #: pokemon(id: \"25\") ← Pikachu");
+    console.log(`Seeded ${pokemons.length} Pokemon and ${users.length} users`);
+    console.log("Login: admin/admin123 or user/user123");
 
   } catch (error) {
-    console.error("❌ Seed failed:", error);
+    console.error("Seed failed:", error);
     process.exit(1);
   } finally {
     await disconnectDatabase();

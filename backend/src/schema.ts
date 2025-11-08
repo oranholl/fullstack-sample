@@ -136,19 +136,17 @@ async function comparePassword(password: string, hash: string): Promise<boolean>
 function authenticate(token: string): { username: string } {
   const user = verifyToken(token);
   if (!user) {
-    throw new Error("Authentication required. Invalid or expired token.");
+    throw new Error("Invalid token");
   }
   return user;
 }
 
 async function findPokemonById(id: string) {
-  // Try as MongoDB ObjectId first
   if (mongoose.Types.ObjectId.isValid(id)) {
     const pokemon = await Pokemon.findById(id).lean();
     if (pokemon) return pokemon;
   }
   
-  // Try as Pokedex number
   const pokedexNumber = parseInt(id);
   if (!isNaN(pokedexNumber)) {
     const pokemon = await Pokemon.findOne({ pokedexNumber }).lean();
@@ -177,17 +175,15 @@ export const resolvers = {
         filter?: any;
       }
     ) => {
-      // Validate pageSize
       if (![10, 20, 50].includes(pageSize)) {
-        throw new Error("Page size must be 10, 20, or 50");
+        throw new Error("Invalid page size");
       }
 
-      // Build MongoDB query
       const query: any = {};
 
       if (filter) {
         if (filter.name) {
-          query.name = { $regex: filter.name, $options: 'i' }; // Case-insensitive search
+          query.name = { $regex: filter.name, $options: 'i' };
         }
         if (filter.minHeight !== undefined) {
           query.height = { ...query.height, $gte: filter.minHeight };
@@ -206,15 +202,12 @@ export const resolvers = {
         }
       }
 
-      // Build sort
       const sortField = sortBy === "NAME" ? "name" : sortBy.toLowerCase();
       const sortDirection = sortOrder === "ASC" ? 1 : -1;
       const sort: any = { [sortField]: sortDirection };
 
-      // Get total count
       const totalCount = await Pokemon.countDocuments(query);
 
-      // Get paginated results
       const skip = (page - 1) * pageSize;
       const items = await Pokemon.find(query)
         .sort(sort)
@@ -222,7 +215,6 @@ export const resolvers = {
         .limit(pageSize)
         .lean();
 
-      // Calculate pagination info
       const totalPages = Math.ceil(totalCount / pageSize);
 
       return {
@@ -253,7 +245,7 @@ export const resolvers = {
     me: (_: any, { token }: { token: string }) => {
       const user = verifyToken(token);
       if (!user) {
-        throw new Error("Invalid or expired token");
+        throw new Error("Invalid token");
       }
       return { username: user.username, token };
     },
@@ -282,28 +274,23 @@ export const resolvers = {
     },
 
     register: async (_: any, { username, password }: { username: string; password: string }) => {
-      // Check if user already exists
-      const existingUser = await User.findOne({ username: username.toLowerCase() });
+      const user = await User.findOne({ username: username.toLowerCase() });
       
-      if (existingUser) {
-        throw new Error("Username already exists");
+      if (user) {
+        throw new Error("Username exists");
       }
 
-      // Validate password strength
       if (password.length < 6) {
-        throw new Error("Password must be at least 6 characters long");
+        throw new Error("Password too short");
       }
 
-      // Hash password
       const hashedPassword = await hashPassword(password);
 
-      // Create new user
       const newUser = await User.create({
         username: username.toLowerCase(),
         password: hashedPassword,
       });
 
-      // Generate JWT token
       const token = generateToken(newUser.username);
 
       return {
@@ -399,7 +386,6 @@ export const resolvers = {
       if (category !== undefined) updateData.category = category;
       if (description !== undefined) updateData.description = description;
 
-      // Try to find by MongoDB ID or Pokedex number
       let pokemon;
       if (mongoose.Types.ObjectId.isValid(id)) {
         pokemon = await Pokemon.findByIdAndUpdate(
@@ -433,7 +419,6 @@ export const resolvers = {
 
       let result;
       
-      // Try to delete by MongoDB ID or Pokedex number
       if (mongoose.Types.ObjectId.isValid(id)) {
         result = await Pokemon.findByIdAndDelete(id);
       } else {
