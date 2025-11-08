@@ -15,12 +15,9 @@ export default function App() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      // Check if it's a number (search by ID)
       if (/^\d+$/.test(searchQuery.trim())) {
-        // Navigate directly to pokemon detail
         navigate(`/pokemon/${searchQuery.trim()}`);
       } else {
-        // Search by name - navigate to list with search param
         navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
       }
     } else {
@@ -55,7 +52,7 @@ export default function App() {
                   onKeyPress={handleKeyPress}
                 />
                 <button className="search-button" onClick={handleSearch}>
-                  🔍
+                  Search
                 </button>
               </div>
               <p className="advanced-search-text">

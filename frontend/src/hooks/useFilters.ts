@@ -19,9 +19,6 @@ const initialFilters: PokemonFilters = {
   type: "",
 };
 
-/**
- * Hook to manage Pokemon filter state with URL sync
- */
 export function useFilters() {
   const [searchParams] = useSearchParams();
   const searchFromUrl = searchParams.get("search") || "";
@@ -31,7 +28,6 @@ export function useFilters() {
     name: searchFromUrl,
   });
 
-  // Update filter when URL search param changes
   useEffect(() => {
     setFilters(prev => ({ ...prev, name: searchFromUrl }));
   }, [searchFromUrl]);
@@ -44,7 +40,6 @@ export function useFilters() {
     setFilters(initialFilters);
   };
 
-  // Convert filters to GraphQL format (removing empty values)
   const getGraphQLFilters = () => ({
     name: filters.name || undefined,
     minHeight: filters.minHeight ? parseInt(filters.minHeight) : undefined,

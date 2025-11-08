@@ -97,7 +97,7 @@ export default function PokemonListPage() {
             alignItems: "center"
           }}>
             <span>
-              🔍 Searching for: <strong>{filters.name}</strong>
+              Searching for: <strong>{filters.name}</strong>
             </span>
             <button
               onClick={handleClearFilters}
@@ -270,4 +270,3 @@ export default function PokemonListPage() {
     </>
   );
 }
-
