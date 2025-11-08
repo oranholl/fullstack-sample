@@ -50,12 +50,9 @@ Authentication (JWT)
 Seeding & Migrations
 - Seed:
   npm run seed --prefix backend
-- This repo has no built-in migration framework. Recommended options:
-  - migrate-mongo (simple CLI for MongoDB migrations)
-    npx migrate-mongo init
-    npx migrate-mongo create <name>
-    npx migrate-mongo up
-  - Or add JS/TS migration scripts under backend/migrations and run from npm scripts/CI.
+- Migrate (run database schema updates):
+  npm run migrate --prefix backend
+  Edit backend/src/migrate.ts to add new migrations as simple MongoDB updates.
 - Back up production data before migrations:
   mongodump --uri="your-mongodb-uri" --out=backup-YYYYMMDD
 
@@ -65,6 +62,3 @@ GraphQL endpoint
 
 License / Credits
 - Learning/sample project — see repo for author info.
-
-
-
