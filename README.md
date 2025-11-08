@@ -1,42 +1,70 @@
-# Factofly Fullstack Sample Tasks
-## Project: Pokemon Manager API
+# Fullstack Sample — Pokémon Manager
 
-### Requirements 💡
-- **Frontend framework**: ReactJS
-- **Database**: PostgreSQL
-- **Language**: TypeScript (Node.js)
-- **Backend framework**: [Next.js](https://nextjs.org/) & [Prisma (ORM)](https://www.prisma.io/)
+Small fullstack sample app demonstrating a GraphQL-backed manager:
+- Frontend: React + Vite (TypeScript)
+- Backend: Node + Express + Apollo GraphQL
+- DB: MongoDB
+- Auth: JWT (basic login/register)
+- Workspace: npm workspaces
 
-### Notes 📝
-The scope of this sample project comes in two parts:
+Project layout
+- frontend/ — React app (entry: frontend/src/main.tsx)
+- backend/ — Apollo Server + resolvers (entry: backend/src/index.ts)
+- Root package.json uses npm workspaces
 
-1. Convert the designs to a Frontend template
-2. Handle Pokemon data and expose routes that let clients interact with it in the way that is discribed below.
+Quick start
+1. Prereqs
+   - Node.js (includes npm/npx). Verify:
+     npx -v
+     npm -v
+   - MongoDB running locally or a remote URI.
 
-The orginal Pokemon data is found at [PokeAPI](https://pokeapi.co/docs/v2)
+2. Install deps (root)
+   npm install
 
-### Tasks ✅
-- Create an API which will have the following features:
-  - Basic authentication (You need to be logged in to add/edit/delete)
-  - A list of paginated Pokemons (each item should contain: name, height, weight and image). The result should be:
-    - sortable by name, height and weight;
-    - filterable by name, height range and weight range.
-  - The pagination should allow the clients to choose how many items are displayed on a page. Allowed values: 10, 20 and 50;
-  - Ability to add/edit/delete custom Pokemons.
-- Bonus points:
-  - Use GraphQL instead of REST endpoints
+3. Seed sample data (optional)
+   npm run seed --prefix backend
 
-### Submitting 🚀
-Upload your project to your Git & include the url of the repository in your application. Remember that the repository must be public!
+4. Run in dev (starts both services via workspace scripts)
+   npm run dev
 
-### Designs ✏️
-The following designs are to be used as a reference when creating the frontend templates:
+5. Build
+   npm run build
 
-#### Search Page
-![image](https://github.com/FactoFly/fullstack-sample/assets/104838081/3b75bd15-c465-4ecc-b18c-d99a7f0fdcc7)
+Environment
+- Create a .env in backend/ or set env vars:
+  - MONGODB_URI (default: mongodb://localhost:27017/pokemon-db)
+  - PORT (default: 4000)
+  - JWT_SECRET (set to a secure value)
+- Example backend/.env:
+  MONGODB_URI=mongodb://localhost:27017/pokemon-db
+  PORT=4000
+  JWT_SECRET=secret
 
-#### Detail Page
-![image](https://github.com/FactoFly/fullstack-sample/assets/104838081/fac29243-10fa-43f2-a46c-8b164230afe4)
+Authentication (JWT)
+- Backend issues JWTs on register/login
+- Frontend stores the token in localStorage and attaches it as:
+  Authorization: Bearer <token>
+- Ensure JWT_SECRET is set in backend before issuing tokens.
+
+Seeding & Migrations
+- Seed:
+  npm run seed --prefix backend
+- This repo has no built-in migration framework. Recommended options:
+  - migrate-mongo (simple CLI for MongoDB migrations)
+    npx migrate-mongo init
+    npx migrate-mongo create <name>
+    npx migrate-mongo up
+  - Or add JS/TS migration scripts under backend/migrations and run from npm scripts/CI.
+- Back up production data before migrations:
+  mongodump --uri="your-mongodb-uri" --out=backup-YYYYMMDD
+
+GraphQL endpoint
+- Backend default: http://localhost:4000/graphql
+- Frontend dev: Vite default (e.g. http://localhost:5173) — see frontend config.
+
+License / Credits
+- Learning/sample project — see repo for author info.
 
 
 
