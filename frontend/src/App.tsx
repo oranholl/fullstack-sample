@@ -88,11 +88,17 @@ export default function App() {
 
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<PokemonListPage />} />
-          <Route path="/pokemon/:id" element={<PokemonDetailPage />} />
-          <Route path="/add" element={<AddPokemonPage />} />
-          <Route path="/edit/:id" element={<EditPokemonPage />} />
           <Route path="/login" element={<LoginPage />} />
+          {isAuthenticated ? (
+            <>
+              <Route path="/" element={<PokemonListPage />} />
+              <Route path="/pokemon/:id" element={<PokemonDetailPage />} />
+              <Route path="/add" element={<AddPokemonPage />} />
+              <Route path="/edit/:id" element={<EditPokemonPage />} />
+            </>
+          ) : (
+            <Route path="*" element={<LoginPage />} />
+          )}
         </Routes>
       </main>
     </div>
