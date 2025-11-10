@@ -16,7 +16,8 @@ export default function PokemonListPage() {
   const [showFilters, setShowFilters] = useState(false);
   
   const navigate = useNavigate();
-  const { token, isAuthenticated } = useAuth();
+  const { token, username } = useAuth();
+  const isAdmin = username === "admin";
   const { filters, updateFilter, clearFilters, getGraphQLFilters } = useFilters();
 
   const { data, loading, error, refetch } = useQuery(GET_POKEMONS, {
@@ -220,7 +221,7 @@ export default function PokemonListPage() {
               <PokemonCard
                 key={pokemon.id}
                 pokemon={pokemon}
-                isAuthenticated={isAuthenticated}
+                isAdmin={isAdmin}
                 onDelete={handleDelete}
               />
             ))}

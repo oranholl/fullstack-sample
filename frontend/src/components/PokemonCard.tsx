@@ -9,11 +9,11 @@ interface PokemonCardProps {
     imageUrl?: string;
     types: string[];
   };
-  isAuthenticated: boolean;
+  isAdmin: boolean;
   onDelete: (id: string, e: React.MouseEvent) => void;
 }
 
-export default function PokemonCard({ pokemon, isAuthenticated, onDelete }: PokemonCardProps) {
+export default function PokemonCard({ pokemon, isAdmin, onDelete }: PokemonCardProps) {
   const displayNumber = pokemon.pokedexNumber || pokemon.id;
 
   return (
@@ -36,7 +36,7 @@ export default function PokemonCard({ pokemon, isAuthenticated, onDelete }: Poke
         ))}
       </div>
 
-      {isAuthenticated && (
+      {isAdmin && (
         <div className="pokemon-actions">
           <Link
             to={`/edit/${displayNumber}`}

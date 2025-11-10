@@ -11,6 +11,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const { username, isAuthenticated } = useAuth();
+  const isAdmin = username === "admin";
   const logout = useLogout();
 
   const handleSearch = () => {
@@ -93,8 +94,12 @@ export default function App() {
             <>
               <Route path="/" element={<PokemonListPage />} />
               <Route path="/pokemon/:id" element={<PokemonDetailPage />} />
-              <Route path="/add" element={<AddPokemonPage />} />
-              <Route path="/edit/:id" element={<EditPokemonPage />} />
+              {isAdmin && (
+                <>
+                  <Route path="/add" element={<AddPokemonPage />} />
+                  <Route path="/edit/:id" element={<EditPokemonPage />} />
+                </>
+              )}
             </>
           ) : (
             <Route path="*" element={<LoginPage />} />
